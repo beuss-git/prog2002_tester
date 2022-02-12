@@ -1,3 +1,7 @@
+# Visual Studio
+.vs/
+ipch/
+out/
 # Prerequisites
 *.d
 
