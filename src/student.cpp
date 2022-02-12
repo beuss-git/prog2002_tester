@@ -3,7 +3,6 @@
 #include <iostream>
 #include <glad/glad.h>
 
-#include "file_manager.hpp"
 #include "GLFW/glfw3.h"
 
 //void ExampleGraphics::setup() {
@@ -31,7 +30,7 @@ MessageCallback(GLenum source,
     const void* userParam);
 
 
-int ExampleGraphics::simplerun() {
+int Lab01::simplerun() {
 	
 	
     glfwSetErrorCallback(GLFWErrorCallback);
@@ -64,12 +63,11 @@ int ExampleGraphics::simplerun() {
     glfwMakeContextCurrent(window);
 
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-      {
-      std::cout << "Failed to initialize GLAD" << std::endl;
-      glfwTerminate();
-      return EXIT_FAILURE;
-      }
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		glfwTerminate();
+		return EXIT_FAILURE;
+	}
 
     // Enable capture of debug output.
     glEnable(GL_DEBUG_OUTPUT);
@@ -81,14 +79,13 @@ int ExampleGraphics::simplerun() {
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
 
     // Clear the background
-    //glClearColor(0.5f, 0.0f, 0.0f, 1.0f);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     // Create a triangle geometry
     GLfloat triangle[3*2] = {
-    -0.5f, -0.5f,
-    0.5f, -0.5f,
-    0.0f, 0.5f
+		-0.5f, -0.5f,
+		0.5f, -0.5f,
+		0.0f, 0.5f
     };
 
     // Create a vertex array
@@ -106,9 +103,6 @@ int ExampleGraphics::simplerun() {
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float)*2, nullptr);
     glEnableVertexAttribArray(0);
 
-    //const auto vertexShaderSrc = utils::load_file("../../../shaders/vert_shader.vert");
-
-    //const auto fragmentShaderSrc = utils::load_file("../../../shaders/frag_shader.frag");
         // Vertex shader code
 	const std::string vertexShaderSrc = R"(
 #version 430 core
@@ -165,6 +159,7 @@ color = vec4(1);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glDrawArrays(GL_TRIANGLES, 0, 3);
+        //glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
 

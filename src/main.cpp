@@ -2,8 +2,8 @@
 
 int main(int argc, char* argv[]) {
 
-	ExampleGraphics example(argc, argv);
+	Lab01 lab01(argc, argv);
 	//example.run();
 
-	return example.simplerun();
+	return lab01.simplerun();
 }
