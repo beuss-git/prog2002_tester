@@ -30,9 +30,7 @@ MessageCallback(GLenum source,
     const void* userParam);
 
 
-int Lab01::simplerun() {
-	
-	
+int Lab01::main() {
     glfwSetErrorCallback(GLFWErrorCallback);
    
     // Initialization of glfw.

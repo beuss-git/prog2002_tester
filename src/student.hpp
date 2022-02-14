@@ -7,5 +7,5 @@ public:
 	//void setup() override;
 	//void run() override;
 	//void cleanup() override;
-	int simplerun();
+	int main();
 };
