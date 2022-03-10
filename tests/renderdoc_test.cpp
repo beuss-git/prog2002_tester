@@ -16,12 +16,6 @@ std::string exec(std::string cmd) {
 }
 
 int renderdoc_test(int argc, char* argv[]) {
-	//argparse::ArgumentParser parser("test_framework");
-	//parser.add_argument("--frame").help("frame to capture on").scan<'i', int>().default_value(0);
-	//parser.add_argument("--framecount").help("amount of frames to capture").scan<'i', int>().default_value(0);
-	//parser.add_argument("--test").help("run tests").default_value(false).implicit_value(true);
-	//parser.add_argument("--verbose", "-v").default_value(false).implicit_value(true);
-	//parser.add_argument("--log");
 	printf("renderdoc_test\n");
 
     // TODO: hardcoded path
@@ -30,13 +24,6 @@ int renderdoc_test(int argc, char* argv[]) {
         arguments << argv[i] << " ";
     }
     std::cout << "Arguments: " << arguments.str() << "\n";
-    /* Conforms to original script
-    static const std::string test_script_path = R"("G:\repos\test_framework_tester\run_tests.py")";
-    static const std::string python_executable = R"("C:\Python36\python.exe)";
-    static const std::string pyrenderdoc = R"(--pyrenderdoc "G:\GitProjects\renderdoc-1.18\x64\Release\pymodules")";
-    static const std::string renderdoc = R"(--renderdoc "G:\GitProjects\renderdoc-1.18\x64\Release")";
-    static const std::string demos_binary = R"(--demos-binary "G:\repos\test_framework\out\build\x64-Debug\test_framework.exe")";
-    */
 
     static const std::string test_script_path = R"("G:\repos\test_framework_tester\run_tests2.py")";
     static const std::string python_executable = R"("C:\Python36\python.exe)";
