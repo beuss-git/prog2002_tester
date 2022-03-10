@@ -22,9 +22,14 @@ function(create_test_driver KIT KIT_LIBS KitTests)
 	#message(STATUS "LIBS: ${KIT_LIBS}")
 	#message(STATUS "KitTests: ${KitTests}")
 	target_link_libraries(${KIT}TestDriver LINK_PUBLIC ${KIT_LIBS})
+	target_compile_features(${KIT}TestDriver PRIVATE cxx_std_20)
 endfunction()
 
 function(add_renderdoc_test TEST_NAME KIT)
 	add_test(${TEST_NAME} ${KIT}TestDriver ${ARGN})
 endfunction()
 
+
+function (add_python_renderdoc_test TEST_NAME TEST_DRIVER_ARGS COMMAND)
+
+endfunction()
