@@ -148,8 +148,6 @@ color = vec4(1);
 
     glUseProgram(shaderProgram);
 
-	const clock_t begin_time = clock();
-
     // Main loop
     while(running() && !glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -157,7 +155,6 @@ color = vec4(1);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glDrawArrays(GL_TRIANGLES, 0, 3);
-        //glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
 
