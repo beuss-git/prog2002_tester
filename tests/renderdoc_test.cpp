@@ -18,7 +18,7 @@ std::string exec(std::string cmd) {
 int renderdoc_test(int argc, char* argv[]) {
 	printf("renderdoc_test\n");
 
-    // TODO: hardcoded path
+    // TODO: hardcoded paths
     std::stringstream arguments;
     for (int i = 1; i < argc; i++) {
         arguments << argv[i] << " ";
