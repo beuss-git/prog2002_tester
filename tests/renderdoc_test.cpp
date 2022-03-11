@@ -2,17 +2,18 @@
 #include <array>
 #include "../external/include/argparse/argparse.hpp"
 
-std::string exec(std::string cmd) {
+std::pair<std::string, int> exec(std::string cmd) {
     std::array<char, 128> buffer{};
     std::string result;
-    const std::unique_ptr<FILE, decltype(&_pclose)> pipe(_popen(cmd.c_str(), "r"), _pclose);
+    FILE* pipe = _popen(cmd.c_str(), "r");
     if (!pipe) {
         throw std::runtime_error("popen() failed!");
     }
-    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+	while (fgets(buffer.data(), buffer.size(), pipe) != nullptr) {
         result += buffer.data();
     }
-    return result;
+    int rc = _pclose(pipe);
+    return std::make_pair(result, rc);
 }
 
 int renderdoc_test(int argc, char* argv[]) {
@@ -40,12 +41,18 @@ int renderdoc_test(int argc, char* argv[]) {
 		+ test_binary;
 
     std::cout << "Command: " << command << "\n";
-    const auto output = exec(command);
+	try {
+		const auto [output, exit_code] = exec(command);
 
-    std::cout << "Output: " << output;
-    if (output.find(R"(// fail=0)") == std::string::npos) {
+		std::cout << "Output: " << output;
+		if (exit_code != 0) {
+			return -1;
+		}
+	}
+	catch (std::runtime_error& e) {
+        std::cerr << e.what();
         return -1;
-    }
+	}
 
 	return 0;
 }
