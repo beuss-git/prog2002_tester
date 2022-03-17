@@ -30,7 +30,11 @@ MessageCallback(GLenum source,
     const void* userParam);
 
 
-int Lab01::main() {
+GLFWwindow* window = nullptr;
+GLuint vertexArrayId;
+GLuint vertexBufferId;
+
+bool Lab01::setup() {
     glfwSetErrorCallback(GLFWErrorCallback);
    
     // Initialization of glfw.
@@ -38,7 +42,7 @@ int Lab01::main() {
     {
         std::cin.get();
 
-        return EXIT_FAILURE;
+        return false;
     }
 
     // Create a window
@@ -46,7 +50,7 @@ int Lab01::main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    auto window = glfwCreateWindow(800, 600, "Hello Triangle", nullptr, nullptr);
+    window = glfwCreateWindow(800, 600, "Hello Triangle", nullptr, nullptr);
     if (window == nullptr)
     {
 
@@ -54,7 +58,7 @@ int Lab01::main() {
 
         std::cin.get();
 
-        return EXIT_FAILURE;
+        return false;
     }
 
     //Set the OpenGL context
@@ -64,7 +68,7 @@ int Lab01::main() {
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		glfwTerminate();
-		return EXIT_FAILURE;
+		return false;
 	}
 
     // Enable capture of debug output.
@@ -87,12 +91,10 @@ int Lab01::main() {
     };
 
     // Create a vertex array
-    GLuint vertexArrayId;
     glGenVertexArrays(1, &vertexArrayId);
     glBindVertexArray(vertexArrayId);
 
     // Create a vertex buffer
-    GLuint vertexBufferId;
     glGenBuffers(1, &vertexBufferId);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
 
@@ -148,29 +150,40 @@ color = vec4(1);
 
     glUseProgram(shaderProgram);
 
-    // Main loop
-    while(running() && !glfwWindowShouldClose(window)) {
-        glfwPollEvents();
+    return true;
+}
 
-        glClear(GL_COLOR_BUFFER_BIT);
+bool Lab01::run() {
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        glfwSwapBuffers(window);
-
-        // Exit the loop if escape is pressed
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) break;
+    if (glfwWindowShouldClose(window)) {
+        return false;
     }
 
+	// Main loop
+	glfwPollEvents();
+
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+
+	glfwSwapBuffers(window);
+
+	// Exit the loop if escape is pressed
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        return false;
+    }
+
+
+    return true;
+
+}
+bool Lab01::cleanup() {
     glDisableVertexAttribArray(0);
     glDeleteBuffers(1, &vertexBufferId);
     glDeleteVertexArrays(1, &vertexArrayId);
 
-
     glfwTerminate();
-
-    return EXIT_SUCCESS;
-
+    return true;
 }
 
 

@@ -1,11 +1,10 @@
 #pragma once
 #include "../framework/graphics_framework.hpp"
 
-class Lab01 final : GraphicsFramework {
+class Lab01 final : public GraphicsFramework {
 public:
 	Lab01(int argc, char* argv[]) : GraphicsFramework(argc, argv){}
-	//void setup() override;
-	//void run() override;
-	//void cleanup() override;
-	int main();
+	bool setup() override;
+	bool run() override;
+	bool cleanup() override;
 };
