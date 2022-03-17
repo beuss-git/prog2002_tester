@@ -7,4 +7,12 @@
 [submodule "external/glad"]
 	path = external/glad
 	url = https://github.com/Dav1dde/glad
-
+[submodule "external/pugixml"]
+	path = "external/pugixml"
+	url = https://github.com/zeux/pugixml.git
+[submodule "external/miniz"]
+	path = external/miniz
+	url = https://github.com/richgel999/miniz
+[submodule "external/fmt"]
+	path = external/fmt
+	url = https://github.com/fmtlib/fmt
