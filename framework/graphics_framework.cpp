@@ -1,7 +1,9 @@
 #include "graphics_framework.hpp"
 #include <argparse/argparse.hpp>
-
 #include "glad/glad.h"
+#ifdef WIN32
+#include <Windows.h>
+#endif
 
 GraphicsFramework::GraphicsFramework(int argc, char* argv[]) {
 	argparse::ArgumentParser parser("test_framework");
@@ -39,8 +41,19 @@ GraphicsFramework::GraphicsFramework(int argc, char* argv[]) {
 			std::cout << "Max frames: " << m_max_frames << "\n";
 		}
 	}
+
+	init_renderdoc();
 }
 
+
+// TODO: support multiple frames here
+bool GraphicsFramework::should_capture() {
+	if (!m_rdoc_api || !m_testing) {
+		return false;
+	}
+
+	return m_current_frame == m_max_frames - 1;
+}
 
 bool GraphicsFramework::running() {
 	// Always running if we are not performing tests
@@ -62,4 +75,48 @@ void GraphicsFramework::set_marker(const std::string& name) {
 		glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 0,
 			GL_DEBUG_SEVERITY_LOW, -1, name.c_str());
 
+}
+
+void GraphicsFramework::init_renderdoc() {
+
+#ifdef WIN32
+	// At init, on windows
+	if(HMODULE mod = GetModuleHandleA("renderdoc.dll"))
+	{
+		pRENDERDOC_GetAPI RENDERDOC_GetAPI =
+			(pRENDERDOC_GetAPI)GetProcAddress(mod, "RENDERDOC_GetAPI");
+		int ret = RENDERDOC_GetAPI(eRENDERDOC_API_Version_1_1_2, (void **)&m_rdoc_api);
+	}
+#else
+
+	// At init, on linux/android.
+	// For android replace librenderdoc.so with libVkLayer_GLES_RenderDoc.so
+	if(void *mod = dlopen("librenderdoc.so", RTLD_NOW | RTLD_NOLOAD))
+	{
+		pRENDERDOC_GetAPI RENDERDOC_GetAPI = (pRENDERDOC_GetAPI)dlsym(mod, "RENDERDOC_GetAPI");
+		int ret = RENDERDOC_GetAPI(eRENDERDOC_API_Version_1_1_2, (void **)&rdoc_api);
+		assert(ret == 1);
+	}
+#endif
+
+	//// To start a frame capture, call StartFrameCapture.
+	//// You can specify NULL, NULL for the device to capture on if you have only one device and
+	//// either no windows at all or only one window, and it will capture from that device.
+	//// See the documentation below for a longer explanation
+	//if(rdoc_api) rdoc_api->StartFrameCapture(NULL, NULL);
+
+	//// Your rendering should happen here
+
+	//// stop the capture
+	//if(rdoc_api) rdoc_api->EndFrameCapture(NULL, NULL);
+}
+
+void GraphicsFramework::start_capture() {
+	std::cout << "Starting capture!\n";
+	m_rdoc_api->StartFrameCapture(nullptr, nullptr);
+}
+
+void GraphicsFramework::end_capture() {
+	std::cout << "Ending capture!\n";
+	m_rdoc_api->EndFrameCapture(nullptr, nullptr);
 }
