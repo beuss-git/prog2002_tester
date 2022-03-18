@@ -1,15 +1,16 @@
 #pragma once
 #include <string>
-#include "renderdoc/api/replay/renderdoc_replay.h"
+#include "../external/renderdoc/api/replay/renderdoc_replay.h"
 
 
 class RenderDocHelper {
 public:
-	RenderDocHelper(const std::string& rdc_path);
+	RenderDocHelper(std::string rdc_path);
 	~RenderDocHelper();
 	bool open_capture();
 
 	void dump_actions();
+	size_t drawcalls_count() const;
 private:
 	ActionDescription find_action_by_name(std::string_view name) const {
 		for (auto action : m_controller->GetRootActions()) {

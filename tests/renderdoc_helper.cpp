@@ -64,3 +64,7 @@ void RenderDocHelper::dump_actions() {
 		fmt::print("{}\n", action.GetName(*m_structured_data).c_str());
 	}
 }
+
+size_t RenderDocHelper::drawcalls_count() const {
+	return m_controller->GetRootActions().size();
+}

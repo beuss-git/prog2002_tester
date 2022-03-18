@@ -28,8 +28,8 @@ add_executable (test_framework
 	"src/student.hpp"
 	"framework/renderdoc.hpp"
 	"framework/renderdoc.cpp"
-	"framework/renderdoc_helper.hpp"
-	"framework/renderdoc_helper.cpp"
+	"tests/renderdoc_helper.hpp"
+	"tests/renderdoc_helper.cpp"
 )
 
 
