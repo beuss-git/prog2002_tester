@@ -17,7 +17,7 @@ function(create_test_driver KIT KIT_LIBS KitTests)
 	add_executable(${KIT}TestDriver ${KIT}TestDriver.cxx ${Tests} ${ADDITIONAL_SRC})
 
 	target_link_libraries(${KIT}TestDriver LINK_PUBLIC ${KIT_LIBS})
-	target_compile_features(${KIT}TestDriver PRIVATE cxx_std_20)
+	target_compile_features(${KIT}TestDriver PRIVATE cxx_std_17)
 endfunction()
 
 function(add_renderdoc_test TEST_NAME KIT)
