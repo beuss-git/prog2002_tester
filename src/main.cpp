@@ -1,5 +1,9 @@
-﻿#include "student.hpp"
+#include "student.hpp"
 #include "../framework/renderdoc.hpp"
+#include "../framework/renderdoc_helper.hpp"
+
+// Add this to test driver (before)
+REPLAY_PROGRAM_MARKER()
 
 int main(int argc, char* argv[]) {
 
