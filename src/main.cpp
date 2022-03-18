@@ -1,13 +1,12 @@
 ﻿#include "student.hpp"
-#include "../framework/renderdoc.hpp"
-#include "../framework/renderdoc_helper.hpp"
+//#include "../framework/renderdoc.hpp"
+//#include "../framework/renderdoc_helper.hpp"
 
 // Add this to test driver (before)
-REPLAY_PROGRAM_MARKER()
 
 int main(int argc, char* argv[]) {
 
-#if 1
+#if 0
 	//RenderDoc::Dump renderdoc(R"(G:\repos\test_framework_tester\tmp\TestFramework\capture_frame5.xml)");
 	//if (!renderdoc.parse()) {
 	//	return -1;
@@ -20,9 +19,6 @@ int main(int argc, char* argv[]) {
 	//}
 	// Load reference image to compare
 
-	RenderDocHelper helper(R"(G:\repos\test_framework_tester\tmp\TestFramework\capture_frame5.rdc)");
-	helper.open_capture();
-	helper.dump_actions();
 	
 	return 0;
 #else

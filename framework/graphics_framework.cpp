@@ -102,17 +102,6 @@ void GraphicsFramework::init_renderdoc() {
 		//assert(ret == 1);
 	}
 #endif
-
-	//// To start a frame capture, call StartFrameCapture.
-	//// You can specify NULL, NULL for the device to capture on if you have only one device and
-	//// either no windows at all or only one window, and it will capture from that device.
-	//// See the documentation below for a longer explanation
-	//if(rdoc_api) rdoc_api->StartFrameCapture(NULL, NULL);
-
-	//// Your rendering should happen here
-
-	//// stop the capture
-	//if(rdoc_api) rdoc_api->EndFrameCapture(NULL, NULL);
 }
 
 void GraphicsFramework::start_capture() {
