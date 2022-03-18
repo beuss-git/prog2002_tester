@@ -1,8 +1,12 @@
 #include "graphics_framework.hpp"
+
 #include <argparse/argparse.hpp>
 #include "glad/glad.h"
 #ifdef WIN32
 #include <Windows.h>
+#else
+
+#include <dlfcn.h>
 #endif
 
 GraphicsFramework::GraphicsFramework(int argc, char* argv[]) {
@@ -94,8 +98,8 @@ void GraphicsFramework::init_renderdoc() {
 	if(void *mod = dlopen("librenderdoc.so", RTLD_NOW | RTLD_NOLOAD))
 	{
 		pRENDERDOC_GetAPI RENDERDOC_GetAPI = (pRENDERDOC_GetAPI)dlsym(mod, "RENDERDOC_GetAPI");
-		int ret = RENDERDOC_GetAPI(eRENDERDOC_API_Version_1_1_2, (void **)&rdoc_api);
-		assert(ret == 1);
+		int ret = RENDERDOC_GetAPI(eRENDERDOC_API_Version_1_1_2, (void **)&m_rdoc_api);
+		//assert(ret == 1);
 	}
 #endif
 
