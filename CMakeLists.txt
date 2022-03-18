@@ -2,12 +2,18 @@
 
 project (test_framework)
 
+if (MSVC)
+	add_compile_definitions(RENDERDOC_PLATFORM_WIN32)
+	add_compile_definitions(WIN32)
+else()
+	add_compile_definitions(RENDERDOC_PLATFORM_LINUX)
+endif()
+
 find_package(OpenGL REQUIRED)
 
 add_subdirectory(external/glad)
 add_subdirectory(external/glfw)
 add_subdirectory(external/glm)
-#add_subdirectory(${PROJECT_SOURCE_DIR}/external/pugixml)
 add_subdirectory(external/pugixml)
 add_subdirectory(external/fmt)
 add_subdirectory(external/miniz)
@@ -22,18 +28,13 @@ add_executable (test_framework
 	"src/student.hpp"
 	"framework/renderdoc.hpp"
 	"framework/renderdoc.cpp"
-	
- )
+	"framework/renderdoc_helper.hpp"
+	"framework/renderdoc_helper.cpp"
+)
 
-#add_compile_definitions(RENDERDOC_EXPORTS)
-if (MSVC)
-	add_compile_definitions(RENDERDOC_PLATFORM_WIN32)
-else()
-	add_compile_definitions(RENDERDOC_PLATFORM_LINUX)
-endif()
 
 target_compile_features(test_framework PRIVATE cxx_std_17)
-target_link_libraries(test_framework glfw glad glm OpenGL::GL pugixml fmt miniz)
+target_link_libraries(test_framework glfw glad glm OpenGL::GL pugixml fmt miniz "G:/repos/renderdoc/x64/Release/renderdoc.lib")
 target_include_directories(test_framework PRIVATE "external" "external/include" "external/pugixml/src")
 
 add_subdirectory(tests)
