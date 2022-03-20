@@ -1,13 +1,7 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 
-project (test_framework)
-
-if (MSVC)
-	add_compile_definitions(RENDERDOC_PLATFORM_WIN32)
-	add_compile_definitions(WIN32)
-else()
-	add_compile_definitions(RENDERDOC_PLATFORM_LINUX)
-endif()
+set(PROJECT_NAME Lab1)
+project (${PROJECT_NAME})
 
 find_package(OpenGL REQUIRED)
 
@@ -18,24 +12,19 @@ add_subdirectory(external/pugixml)
 add_subdirectory(external/fmt)
 add_subdirectory(external/miniz)
 
-
-add_executable (test_framework 
+add_executable (${PROJECT_NAME} 
 	"src/main.cpp"  
 	"framework/graphics_framework.hpp" 
 	"framework/graphics_framework.cpp" 
 	"external/include/argparse/argparse.hpp" 
 	"src/student.cpp"
 	"src/student.hpp"
-	"framework/renderdoc.hpp"
-	"framework/renderdoc.cpp"
-	"tests/renderdoc_helper.hpp"
-	"tests/renderdoc_helper.cpp"
 )
 
 
-target_compile_features(test_framework PRIVATE cxx_std_17)
-target_link_libraries(test_framework glfw glad glm OpenGL::GL pugixml fmt miniz "G:/repos/renderdoc/x64/Release/renderdoc.lib")
-target_include_directories(test_framework PRIVATE "external" "external/include" "external/pugixml/src")
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+target_link_libraries(${PROJECT_NAME} glfw glad glm OpenGL::GL)
+target_include_directories(${PROJECT_NAME} PRIVATE "external" "external/include")
 
 add_subdirectory(tests)
 
