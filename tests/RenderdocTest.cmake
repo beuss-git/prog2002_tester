@@ -80,8 +80,3 @@ function(add_renderdoc_test TEST_NAME KIT)
 	)
 
 endfunction()
-
-
-function (add_python_renderdoc_test TEST_NAME TEST_DRIVER_ARGS COMMAND)
-
-endfunction()
