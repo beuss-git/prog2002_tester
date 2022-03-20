@@ -1,5 +1,6 @@
 enable_testing()
 
+find_library(RENDERDOC_LIBRARY NAMES renderdoc REQUIRED)
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/tests 
