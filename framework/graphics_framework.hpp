@@ -41,7 +41,10 @@ public:
 		}
 		cleanup();
 
-		return run_state ? EXIT_SUCCESS : EXIT_FAILURE;
+
+		auto ret = run_state ? EXIT_SUCCESS : EXIT_FAILURE;
+		std::cout << "Returning: " << ret << "\n";
+		return ret;
 	}
 protected:
 	virtual bool setup() = 0;

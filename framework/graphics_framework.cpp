@@ -56,7 +56,8 @@ bool GraphicsFramework::should_capture() {
 		return false;
 	}
 
-	return m_current_frame == m_max_frames - 1;
+	//return m_current_frame == m_max_frames - 1;
+	return m_current_frame == m_max_frames;
 }
 
 bool GraphicsFramework::running() {
