@@ -11,46 +11,14 @@ namespace argparse {
 class GraphicsFramework {
 public:
 	GraphicsFramework(int argc, char* argv[]);
-	virtual ~GraphicsFramework() {
-		// might just want to call from run function
-		//cleanup();
-	}
 
-
-	void set_marker(const std::string& name);
-	int main() {
-
-		if (!setup()) {
-			return EXIT_FAILURE;
-		}
-
-		bool run_state = true;
-		while (running()) {
-			if (should_capture()) {
-				start_capture();
-			}
-			run_state = run();
-
-			if (should_capture()) {
-				end_capture();
-			}
-
-			if (!run_state) {
-				break;
-			}
-		}
-		cleanup();
-
-
-		auto ret = run_state ? EXIT_SUCCESS : EXIT_FAILURE;
-		std::cout << "Returning: " << ret << "\n";
-		return ret;
-	}
+	int main();
 protected:
 	virtual bool setup() = 0;
 	virtual bool run() = 0;
 	virtual bool cleanup() = 0;
 private:
+	void set_marker(const std::string& name);
 	bool should_capture();
 	bool running();
 	void init_renderdoc();
