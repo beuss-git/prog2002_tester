@@ -68,3 +68,39 @@ void RenderDocHelper::dump_actions() {
 size_t RenderDocHelper::drawcalls_count() const {
 	return m_controller->GetRootActions().size();
 }
+
+/**
+ * \brief Crudely checks a vertex buffer byte for byte for equality
+ * \param action action that uses the vertex buffer
+ * \param vertices reference vertex data
+ * \return true if the match
+ */
+bool RenderDocHelper::check_vertex_data(ActionDescription action, std::vector<float> vertices) {
+	m_controller->SetFrameEvent(action.eventId, true);
+
+	const auto postvs_data = m_controller->GetPostVSData(0, 0, MeshDataStage::VSOut);
+	const auto buffer_data = m_controller->GetBufferData(postvs_data.vertexResourceId, postvs_data.vertexByteOffset, 0);
+
+	// Could also check if equal if we want to be more strict
+	if (buffer_data.size() < vertices.size() * sizeof(float)) {
+		return false;
+	}
+
+	const auto* data_begin = reinterpret_cast<byte*>(vertices.data());
+	const auto* data_end = data_begin + vertices.size() * sizeof(float);
+
+	if (!std::equal(data_begin, data_end, buffer_data.data())) {
+		return false;
+	}
+
+	return true;
+}
+
+ActionDescription RenderDocHelper::find_action_by_name(std::string_view name) const {
+	for (auto action : m_controller->GetRootActions()) {
+		if (action.GetName(*m_structured_data).c_str() == name) {
+			return action;
+		}
+	}
+	return ActionDescription{};
+}

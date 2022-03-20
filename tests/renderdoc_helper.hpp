@@ -11,15 +11,8 @@ public:
 
 	void dump_actions();
 	size_t drawcalls_count() const;
-private:
-	ActionDescription find_action_by_name(std::string_view name) const {
-		for (auto action : m_controller->GetRootActions()) {
-			if (action.GetName(*m_structured_data).c_str() == name) {
-				return action;
-			}
-		}
-		return ActionDescription{};
-	}
+	bool check_vertex_data(ActionDescription action, std::vector<float> vertices);
+	ActionDescription find_action_by_name(std::string_view name) const;
 
 private:
 	std::string m_rdc_path{};

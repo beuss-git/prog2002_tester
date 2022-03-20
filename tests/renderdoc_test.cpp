@@ -37,5 +37,15 @@ int renderdoc_test(int argc, char* argv[]) {
 		}
 	}
 
+	auto drawcalls_action = helper.find_action_by_name("glDrawArrays()");
+	if (!helper.check_vertex_data(drawcalls_action, {
+		-0.5f, -0.5f, 0.f, 1.f,
+		0.5f, -0.5f, 0.f, 1.f,
+		0.0f, 0.5f, 0.f, 1.f
+		})) {
+		fmt::print("vertex data does not match the expected vertex data");
+		return -1;
+	}
+
 	return 0;
 }
