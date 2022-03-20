@@ -61,7 +61,7 @@ function(add_renderdoc_test TEST_NAME KIT)
 	# arguments to pass on to the executable we want to capture
 	set(CMD_ARGS "capture -w -c ${KIT} ${EXE_PATH} --test --frame ${PARSED_FRAME} --framecount ${PARSED_FRAME_COUNT}")
 
-	set(TESTDRIVER_BIN ${KIT}TestDriver)
+	set(TESTDRIVER_BIN "${CMAKE_CURRENT_BINARY_DIR}/${KIT}TestDriver")
 
 	# Probably a better way to do this.. but this works
 	string (REPLACE ";" " " PARSED_UNPARSED_ARGUMENTS "${PARSED_UNPARSED_ARGUMENTS}")
