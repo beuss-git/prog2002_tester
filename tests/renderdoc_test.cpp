@@ -1,9 +1,10 @@
 #include <argparse/argparse.hpp>
 #include <fmt/core.h>
+#include <fmt/color.h>
 #include "renderdoc_helper.hpp"
 
 
-REPLAY_PROGRAM_MARKER();
+REPLAY_PROGRAM_MARKER()
 
 bool parse_arguments(argparse::ArgumentParser& parser, int argc, char* argv[]) {
 	parser.add_argument("--drawcalls_count").help("target drawcalls count").scan<'i', int>().default_value(-1);
@@ -41,7 +42,7 @@ int renderdoc_test(int argc, char* argv[]) {
 	if (expected_drawcalls_count != -1) {
 		if (const auto drawcalls_count = helper.drawcalls_count();
 			static_cast<size_t>(expected_drawcalls_count) != drawcalls_count) {
-			fmt::print("found {} drawcalls, expected {}", drawcalls_count, expected_drawcalls_count);
+			fmt::print(fg(fmt::color::red), "found {} drawcalls, expected {}\n", drawcalls_count, expected_drawcalls_count);
 			return -1;
 		}
 	}
@@ -52,7 +53,7 @@ int renderdoc_test(int argc, char* argv[]) {
 		0.5f, -0.5f, 0.f, 1.f,
 		0.0f, 0.5f, 0.f, 1.f
 		})) {
-		fmt::print("vertex data does not match the expected vertex data");
+		fmt::print(fg(fmt::color::red), "vertex data does not match the expected vertex data\n");
 		return -1;
 	}
 
