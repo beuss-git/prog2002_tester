@@ -2,7 +2,7 @@
 
 #include <argparse/argparse.hpp>
 #include "glad/glad.h"
-#ifdef WIN32
+#ifdef _WIN32
 #include <Windows.h>
 #else
 
@@ -83,7 +83,7 @@ void GraphicsFramework::set_marker(const std::string& name) {
 
 void GraphicsFramework::init_renderdoc() {
 
-#ifdef WIN32
+#ifdef _WIN32
 	// At init, on windows
 	if(HMODULE mod = GetModuleHandleA("renderdoc.dll"))
 	{
@@ -111,5 +111,7 @@ void GraphicsFramework::start_capture() {
 
 void GraphicsFramework::end_capture() {
 	std::cout << "Ending capture!\n";
-	m_rdoc_api->EndFrameCapture(nullptr, nullptr);
+	if (!m_rdoc_api->EndFrameCapture(nullptr, nullptr)) {
+		std::cout << "Failed to capture!\n";
+	}
 }
