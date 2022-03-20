@@ -7,9 +7,6 @@
 [submodule "external/glad"]
 	path = external/glad
 	url = https://github.com/Dav1dde/glad
-[submodule "external/miniz"]
-	path = external/miniz
-	url = https://github.com/richgel999/miniz
 [submodule "external/fmt"]
 	path = external/fmt
 	url = https://github.com/fmtlib/fmt
