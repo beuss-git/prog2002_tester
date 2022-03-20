@@ -79,7 +79,7 @@ size_t RenderDocHelper::drawcalls_count() const {
 }
 
 /**
- * \brief Crudely checks a vertex buffer byte for byte for equality
+ * \brief Crudely checks the vertex buffer of an action byte for byte for equality
  * \param action action that uses the vertex buffer
  * \param vertices reference vertex data
  * \return true if the match
