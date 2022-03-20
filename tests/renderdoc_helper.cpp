@@ -1,6 +1,8 @@
 #include "renderdoc_helper.hpp"
 #include <fmt/core.h>
+#ifdef _WIN32
 #include <Windows.h>
+#endif
 
 rdcstr conv(const std::string &s) {
 	return { s.c_str(), s.size() };
@@ -26,7 +28,10 @@ bool RenderDocHelper::open_capture() {
 
 	auto global_env = GlobalEnvironment{};
 	global_env.enumerateGPUs = false;
+#ifdef _WIN32
+	// Disable error reporting on windows
 	SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX);
+#endif
 	RENDERDOC_InitialiseReplay(global_env,{});
 
 	m_capture_file = RENDERDOC_OpenCaptureFile();
