@@ -102,13 +102,12 @@ int GraphicsFramework::main() {
 	cleanup();
 
 
-	auto ret = run_state ? EXIT_SUCCESS : EXIT_FAILURE;
-	std::cout << "Returning: " << ret << "\n";
-	return ret;
+	return run_state ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 void GraphicsFramework::init_renderdoc() {
 
+	// TODO: Handle initialization error if we are testing
 #ifdef _WIN32
 	// At init, on windows
 	if(HMODULE mod = GetModuleHandleA("renderdoc.dll"))
@@ -116,7 +115,9 @@ void GraphicsFramework::init_renderdoc() {
 		std::cout << "Found renderdoc lib!\n";
 		pRENDERDOC_GetAPI RENDERDOC_GetAPI =
 			(pRENDERDOC_GetAPI)GetProcAddress(mod, "RENDERDOC_GetAPI");
-		int ret = RENDERDOC_GetAPI(eRENDERDOC_API_Version_1_1_2, (void **)&m_rdoc_api);
+		if (!RENDERDOC_GetAPI(eRENDERDOC_API_Version_1_1_2, (void **)&m_rdoc_api)) {
+			std::cout << "Failed to initialize renderdoc api!\n";
+		}
 	}
 #else
 
@@ -126,8 +127,9 @@ void GraphicsFramework::init_renderdoc() {
 	{
 		std::cout << "Found renderdoc lib!\n";
 		pRENDERDOC_GetAPI RENDERDOC_GetAPI = (pRENDERDOC_GetAPI)dlsym(mod, "RENDERDOC_GetAPI");
-		int ret = RENDERDOC_GetAPI(eRENDERDOC_API_Version_1_1_2, (void **)&m_rdoc_api);
-		//assert(ret == 1);
+		if (!RENDERDOC_GetAPI(eRENDERDOC_API_Version_1_1_2, (void **)&m_rdoc_api)) {
+			std::cout << "Failed to initialize renderdoc api!\n";
+		}
 	}
 #endif
 }
