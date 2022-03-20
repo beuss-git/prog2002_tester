@@ -16,10 +16,6 @@ GraphicsFramework::GraphicsFramework(int argc, char* argv[]) {
 	parser.add_argument("--test").help("run tests").default_value(false).implicit_value(true);
 	parser.add_argument("--verbose", "-v").default_value(false).implicit_value(true);
 	parser.add_argument("--log");
-	//program.add_argument("framecount");
-	//program.add_argument("max-frames");
-	//program.add_argument("validate");
-	//program.add_argument("log");
 
 	try {
 		parser.parse_args(argc, argv);
@@ -80,6 +76,35 @@ void GraphicsFramework::set_marker(const std::string& name) {
 		glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 0,
 			GL_DEBUG_SEVERITY_LOW, -1, name.c_str());
 
+}
+
+int GraphicsFramework::main() {
+
+	if (!setup()) {
+		return EXIT_FAILURE;
+	}
+
+	bool run_state = true;
+	while (running()) {
+		if (should_capture()) {
+			start_capture();
+		}
+		run_state = run();
+
+		if (should_capture()) {
+			end_capture();
+		}
+
+		if (!run_state) {
+			break;
+		}
+	}
+	cleanup();
+
+
+	auto ret = run_state ? EXIT_SUCCESS : EXIT_FAILURE;
+	std::cout << "Returning: " << ret << "\n";
+	return ret;
 }
 
 void GraphicsFramework::init_renderdoc() {
