@@ -7,13 +7,14 @@ REPLAY_PROGRAM_MARKER();
 
 bool parse_arguments(argparse::ArgumentParser& parser, int argc, char* argv[]) {
 	parser.add_argument("--drawcalls_count").help("target drawcalls count").scan<'i', int>().default_value(-1);
+	parser.add_argument("--capture_file").help("the capture file to analyze").default_value(std::string(""));
 
 	try {
 		parser.parse_args(argc, argv);
 	}
 	catch (const std::runtime_error& err) {
-		std::cerr << err.what() << std::endl;
-		std::cerr << parser;
+		std::cout << err.what() << std::endl;
+		std::cout << parser << "\n";
 		return false;
 	}
 	return true;
@@ -25,8 +26,13 @@ int renderdoc_test(int argc, char* argv[]) {
 		return -1;
 
 	const auto expected_drawcalls_count = parser.get<int>("drawcalls_count");
+	const auto capture_file = parser.get<std::string>("capture_file");
+	if (capture_file.empty()) {
+		fmt::print("No capture file!\n");
+		return -1;
+	}
 
-	RenderDocHelper helper(R"(G:\repos\test_framework_tester\tmp\TestFramework\capture_frame5.rdc)");
+	RenderDocHelper helper(capture_file);
 	helper.open_capture();
 
 	if (expected_drawcalls_count != -1) {
