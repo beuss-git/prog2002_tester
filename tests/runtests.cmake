@@ -1,0 +1,13 @@
+function(exec_check CMD ARGS)
+	if(NOT DEFINED ARGS)
+	  set(ARGS )
+	else()
+	  separate_arguments(ARGS)
+	endif()
+    execute_process(COMMAND ${CMD} ${ARGS} RESULT_VARIABLE CMD_RESULT)
+    if(CMD_RESULT)
+        message(FATAL_ERROR "Error running ${CMD} ${ARGS}\n Error: ${CMD_RESULT}")
+    endif()
+endfunction()
+
+exec_check(${CMD1} ${CMD1ARGS})

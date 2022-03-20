@@ -28,16 +28,48 @@ function(create_test_driver KIT KIT_LIBS KitTests)
 
 	add_executable(${KIT}TestDriver ${KIT}TestDriver.cxx ${Tests} ${ADDITIONAL_SRC} "renderdoc_helper.cpp" "renderdoc_helper.hpp")
 
-	target_link_libraries(${KIT}TestDriver LINK_PUBLIC ${KIT_LIBS} )
-	# FIXME
-	target_link_libraries(${KIT}TestDriver LINK_PUBLIC "G:/repos/renderdoc/x64/Release/renderdoc.lib" fmt)
-
+	target_link_libraries(${KIT}TestDriver LINK_PUBLIC ${KIT_LIBS} ${RENDERDOC_LIBRARY} fmt)
 
 	target_compile_features(${KIT}TestDriver PRIVATE cxx_std_17)
 endfunction()
 
 function(add_renderdoc_test TEST_NAME KIT)
-	add_test(${TEST_NAME} ${KIT}TestDriver ${ARGN})
+	cmake_parse_arguments(
+		PARSED
+		""
+		"FRAME;FRAME_COUNT"
+		""
+		${ARGN}
+	)
+
+	if (NOT PARSED_FRAME)
+		set(PARSED_FRAME 0) # Default to first frame
+	endif(NOT PARSED_FRAME)
+
+	if (NOT PARSED_FRAME_COUNT)
+		set(PARSED_FRAME_COUNT 1) # Default to 1 frame
+	endif(NOT PARSED_FRAME_COUNT )
+
+	# Path to the executable we want to capture
+	set(EXE_PATH ${PROJECT_BINARY_DIR}/${KIT})
+	# renderdoccmd executable
+	set(CMD_BIN renderdoccmd)
+	# arguments to pass on to the executable we want to capture
+	set(CMD_ARGS "capture -w -c ${KIT} ${EXE_PATH} --test --frame ${PARSED_FRAME} --framecount ${PARSED_FRAME_COUNT}")
+
+	add_test(NAME test COMMAND 
+	# These are to launch the executable through renderdoccmd and capture the frame(s)
+			${CMAKE_COMMAND}
+            -DCMD1=${CMD_BIN}
+            -DCMD1ARGS=${CMD_ARGS}
+			-P ${CMAKE_CURRENT_SOURCE_DIR}/runtests.cmake
+	)
+
+	# Pass on PARSED_UNPARSED_ARGUMENTS to ignore the parsed arguments
+	# we don't want to pass them to the executable
+	set(TESTDRIVER_ARGS ${PARSED_UNPARSED_ARGUMENTS} --capture_file ${PROJECT_BINARY_DIR}/${KIT}_capture.rdc)
+	message(WARNING "TestDriver Args: ${TESTDRIVER_ARGS}")
+	add_test(${TEST_NAME} ${KIT}TestDriver ${TESTDRIVER_ARGS})
 endfunction()
 
 
