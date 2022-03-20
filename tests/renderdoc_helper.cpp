@@ -3,8 +3,6 @@
 #include <fmt/format.h>
 #ifdef _WIN32
 #include <Windows.h>
-#else
-#include <X11/Xlib.h>
 #endif
 
 rdcstr conv(const std::string &s) {
@@ -63,7 +61,6 @@ bool RenderDocHelper::open_capture() {
 		return false;
 	}
 
-	fmt::print("Controller addr: {}\n", fmt::ptr(controller));
 	m_controller = controller;
 
 	m_structured_data = &m_capture_file->GetStructuredData();
@@ -78,7 +75,6 @@ void RenderDocHelper::dump_actions() {
 }
 
 size_t RenderDocHelper::drawcalls_count() const {
-	if (!m_controller)
 	return m_controller->GetRootActions().size();
 }
 
