@@ -12,6 +12,7 @@ include_directories(
 if (MSVC)
 	add_compile_definitions(RENDERDOC_PLATFORM_WIN32)
 else()
+	# Needed to export (and find) renderdoc__replay__marker on linux
 	set(CMAKE_ENABLE_EXPORTS ON)
 	add_compile_definitions(RENDERDOC_PLATFORM_LINUX)
 endif()
