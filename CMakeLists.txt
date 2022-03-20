@@ -8,9 +8,7 @@ find_package(OpenGL REQUIRED)
 add_subdirectory(external/glad)
 add_subdirectory(external/glfw)
 add_subdirectory(external/glm)
-add_subdirectory(external/pugixml)
 add_subdirectory(external/fmt)
-add_subdirectory(external/miniz)
 
 add_executable (${PROJECT_NAME} 
 	"src/main.cpp"  
