@@ -11,3 +11,4 @@ function(exec_check CMD ARGS)
 endfunction()
 
 exec_check(${CMD1} ${CMD1ARGS})
+exec_check(${CMD2} ${CMD2ARGS})
