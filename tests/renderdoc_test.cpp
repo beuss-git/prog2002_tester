@@ -33,7 +33,10 @@ int renderdoc_test(int argc, char* argv[]) {
 	}
 
 	RenderDocHelper helper(capture_file);
-	helper.open_capture();
+	if (!helper.open_capture()) {
+		fmt::print("Failed to open the capture file, exiting!\n");
+		return -1;
+	}
 
 	if (expected_drawcalls_count != -1) {
 		if (const auto drawcalls_count = helper.drawcalls_count();

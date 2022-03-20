@@ -56,8 +56,8 @@ bool GraphicsFramework::should_capture() {
 		return false;
 	}
 
-	//return m_current_frame == m_max_frames - 1;
-	return m_current_frame == m_max_frames;
+	return m_current_frame == m_max_frames - 1;
+	//return m_current_frame == m_max_frames;
 }
 
 bool GraphicsFramework::running() {
@@ -88,6 +88,7 @@ void GraphicsFramework::init_renderdoc() {
 	// At init, on windows
 	if(HMODULE mod = GetModuleHandleA("renderdoc.dll"))
 	{
+		std::cout << "Found renderdoc lib!\n";
 		pRENDERDOC_GetAPI RENDERDOC_GetAPI =
 			(pRENDERDOC_GetAPI)GetProcAddress(mod, "RENDERDOC_GetAPI");
 		int ret = RENDERDOC_GetAPI(eRENDERDOC_API_Version_1_1_2, (void **)&m_rdoc_api);
@@ -98,6 +99,7 @@ void GraphicsFramework::init_renderdoc() {
 	// For android replace librenderdoc.so with libVkLayer_GLES_RenderDoc.so
 	if(void *mod = dlopen("librenderdoc.so", RTLD_NOW | RTLD_NOLOAD))
 	{
+		std::cout << "Found renderdoc lib!\n";
 		pRENDERDOC_GetAPI RENDERDOC_GetAPI = (pRENDERDOC_GetAPI)dlsym(mod, "RENDERDOC_GetAPI");
 		int ret = RENDERDOC_GetAPI(eRENDERDOC_API_Version_1_1_2, (void **)&m_rdoc_api);
 		//assert(ret == 1);
