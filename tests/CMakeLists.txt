@@ -9,6 +9,6 @@ add_renderdoc_test(RenderDocTest	# test name (added for ctest)
 		Lab1						# exe
 		FRAME 5						# data for test executable
 		FRAME_COUNT 20
-		renderdoc_test				# arguments to Test Driver
+		renderdoc_test				# arguments to Test Driver, the first argument here can probably be hardcoded in the function itself
 		--drawcalls_count 3
 )
