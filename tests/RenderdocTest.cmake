@@ -11,7 +11,6 @@ include_directories(
 
 if (MSVC)
 	add_compile_definitions(RENDERDOC_PLATFORM_WIN32)
-	add_compile_definitions(WIN32)
 else()
 	add_compile_definitions(RENDERDOC_PLATFORM_LINUX)
 endif()
