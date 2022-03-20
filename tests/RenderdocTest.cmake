@@ -12,6 +12,7 @@ include_directories(
 if (MSVC)
 	add_compile_definitions(RENDERDOC_PLATFORM_WIN32)
 else()
+	set(CMAKE_ENABLE_EXPORTS ON)
 	add_compile_definitions(RENDERDOC_PLATFORM_LINUX)
 endif()
 
