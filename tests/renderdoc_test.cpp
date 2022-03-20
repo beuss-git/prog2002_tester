@@ -48,6 +48,7 @@ int renderdoc_test(int argc, char* argv[]) {
 	}
 
 	auto drawcalls_action = helper.find_action_by_name("glDrawArrays()");
+	// This is just to test the function, not implemented as actual test
 	if (!helper.check_vertex_data(drawcalls_action, {
 		-0.5f, -0.5f, 0.f, 1.f,
 		0.5f, -0.5f, 0.f, 1.f,
