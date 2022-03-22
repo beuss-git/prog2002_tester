@@ -2,11 +2,8 @@
 #include <string>
 #include <iostream>
 
-#include "renderdoc/api/app/renderdoc_app.h"
-
-namespace argparse {
-	class ArgumentParser;
-}
+struct RENDERDOC_API_1_5_0;
+typedef RENDERDOC_API_1_5_0 RENDERDOC_API_1_1_2;
 
 class GraphicsFramework {
 public:

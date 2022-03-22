@@ -1,11 +1,11 @@
 #include "graphics_framework.hpp"
-
 #include <argparse/argparse.hpp>
-#include "glad/glad.h"
+#include <glad/glad.h>
+#include <renderdoc/api/app/renderdoc_app.h>
+
 #ifdef _WIN32
 #include <Windows.h>
 #else
-
 #include <dlfcn.h>
 #endif
 
