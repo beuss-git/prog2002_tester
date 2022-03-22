@@ -2,12 +2,14 @@ enable_testing()
 
 find_library(RENDERDOC_LIBRARY NAMES renderdoc REQUIRED)
 
-include_directories(
-	${CMAKE_SOURCE_DIR}/tests 
-	${CMAKE_SOURCE_DIR}/external
-	${CMAKE_SOURCE_DIR}/external/include
-	${CMAKE_SOURCE_DIR}/external/fmt/include
-)
+include(FetchContent)
+FetchContent_Declare(
+	fmt
+	GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+	GIT_TAG 8.1.1)
+FetchContent_MakeAvailable(fmt)
+
+
 
 if (MSVC)
 	add_compile_definitions(RENDERDOC_PLATFORM_WIN32)
@@ -24,13 +26,17 @@ function(create_test_driver KIT KIT_LIBS KitTests)
 	#set(CMAKE_TESTDRIVER_BEFORE_TESTMAIN "${emscripten_before}#include \"itkTestDriverBeforeTest.inc\"")
 	#set(CMAKE_TESTDRIVER_AFTER_TESTMAIN "#include \"itkTestDriverAfterTest.inc\"${emscripten_after}")
 
-	set(ADDITIONAL_SRC ${ARGN})
+	set(ADDITIONAL_SRC ${ARGN} "renderdoc_helper.cpp" "renderdoc_helper.hpp")
 
 	create_test_sourcelist(Tests ${KIT}TestDriver.cxx ${KitTests})
 
-	add_executable(${KIT}TestDriver ${KIT}TestDriver.cxx ${Tests} ${ADDITIONAL_SRC} "renderdoc_helper.cpp" "renderdoc_helper.hpp")
+	add_executable(${KIT}TestDriver ${KIT}TestDriver.cxx ${Tests} ${ADDITIONAL_SRC})
 
-	target_link_libraries(${KIT}TestDriver LINK_PUBLIC ${KIT_LIBS} ${RENDERDOC_LIBRARY} fmt)
+	target_include_directories(${KIT}TestDriver PRIVATE
+		${CMAKE_SOURCE_DIR}/tests 
+	)
+
+	target_link_libraries(${KIT}TestDriver PRIVATE ${KIT_LIBS} ${RENDERDOC_LIBRARY} fmt::fmt argparse::argparse)
 
 	target_compile_features(${KIT}TestDriver PRIVATE cxx_std_17)
 endfunction()
