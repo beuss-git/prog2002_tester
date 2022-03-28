@@ -75,7 +75,7 @@ bool GraphicsFramework::running() {
 void GraphicsFramework::set_marker(const std::string& name) {
 	if (glDebugMessageInsert)
 		glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 0,
-			GL_DEBUG_SEVERITY_LOW, -1, name.c_str());
+		                     GL_DEBUG_SEVERITY_LOW, -1, name.c_str());
 
 }
 
@@ -111,12 +111,11 @@ void GraphicsFramework::init_renderdoc() {
 	// TODO: Handle initialization error if we are testing
 #ifdef _WIN32
 	// At init, on windows
-	if(HMODULE mod = GetModuleHandleA("renderdoc.dll"))
-	{
+	if (HMODULE mod = GetModuleHandleA("renderdoc.dll")) {
 		std::cout << "Found renderdoc lib!\n";
 		pRENDERDOC_GetAPI RENDERDOC_GetAPI =
 			(pRENDERDOC_GetAPI)GetProcAddress(mod, "RENDERDOC_GetAPI");
-		if (!RENDERDOC_GetAPI(eRENDERDOC_API_Version_1_1_2, (void **)&m_rdoc_api)) {
+		if (!RENDERDOC_GetAPI(eRENDERDOC_API_Version_1_1_2, (void**)&m_rdoc_api)) {
 			std::cout << "Failed to initialize renderdoc api!\n";
 		}
 	}

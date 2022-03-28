@@ -53,8 +53,6 @@ bool RenderDocHelper::open_capture() {
 		return false;
 	}
 
-	auto options = ReplayOptions{};
-	options.apiValidation = true;
 	const auto& [status, controller] = m_capture_file->OpenCapture(ReplayOptions{}, nullptr);
 	if (status != ReplayStatus::Succeeded) {
 		fmt::print("Failed to open capture: {}\n", static_cast<int>(status));
@@ -68,8 +66,8 @@ bool RenderDocHelper::open_capture() {
 	return true;
 }
 
-void RenderDocHelper::dump_actions() {
-	for (auto action : m_controller->GetRootActions()) {
+void RenderDocHelper::dump_actions() const {
+	for (const auto& action : m_controller->GetRootActions()) {
 		fmt::print("{}\n", action.GetName(*m_structured_data).c_str());
 	}
 }
@@ -84,7 +82,7 @@ size_t RenderDocHelper::drawcalls_count() const {
  * \param vertices reference vertex data
  * \return true if the match
  */
-bool RenderDocHelper::check_vertex_data(ActionDescription action, std::vector<float> vertices) {
+bool RenderDocHelper::check_vertex_data(ActionDescription action, std::vector<float> vertices) const {
 	m_controller->SetFrameEvent(action.eventId, true);
 
 	const auto postvs_data = m_controller->GetPostVSData(0, 0, MeshDataStage::VSOut);
@@ -106,7 +104,7 @@ bool RenderDocHelper::check_vertex_data(ActionDescription action, std::vector<fl
 }
 
 ActionDescription RenderDocHelper::find_action_by_name(std::string_view name) const {
-	for (auto action : m_controller->GetRootActions()) {
+	for (const auto& action : m_controller->GetRootActions()) {
 		if (action.GetName(*m_structured_data).c_str() == name) {
 			return action;
 		}

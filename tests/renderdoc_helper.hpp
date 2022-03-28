@@ -9,9 +9,9 @@ public:
 	~RenderDocHelper();
 	bool open_capture();
 
-	void dump_actions();
+	void dump_actions() const;
 	size_t drawcalls_count() const;
-	bool check_vertex_data(ActionDescription action, std::vector<float> vertices);
+	bool check_vertex_data(ActionDescription action, std::vector<float> vertices) const;
 	ActionDescription find_action_by_name(std::string_view name) const;
 
 private:
