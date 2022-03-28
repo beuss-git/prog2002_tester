@@ -1,4 +1,3 @@
-enable_testing()
 
 find_library(RENDERDOC_LIBRARY NAMES renderdoc REQUIRED)
 
