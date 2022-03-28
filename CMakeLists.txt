@@ -3,6 +3,9 @@
 set(PROJECT_NAME Lab1)
 project (${PROJECT_NAME})
 
+# Choose vendor neutral OpenGL (libOpenGL.so, libGLX.so) over libGL.so
+cmake_policy(SET CMP0072 NEW)
+
 find_package(OpenGL REQUIRED)
 
 add_subdirectory(external/glad)
