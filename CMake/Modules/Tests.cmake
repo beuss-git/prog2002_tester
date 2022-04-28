@@ -1,6 +1,9 @@
 include (CMake/Modules/RenderdocTest.cmake)
 include (CMake/Modules/OutputTest.cmake)
+include (CMake/Modules/TestManager.cmake)
 
+# Make sure EnabledTests.txt exists
+check_enabledtests_exists()
 
 #[[
 	LabXX tests
@@ -19,5 +22,4 @@ add_renderdoc_test(
 #[[
 	Lab00 tests
 ]]
-
 add_output_test(Lab00 Lab00_Test_01)
