@@ -11,7 +11,7 @@ function(exec_check CMD ARGS)
 		execute_process(COMMAND ${CMD} ${ARGS} RESULT_VARIABLE CMD_RESULT)
 	endif()
 
-    if(CMD_RESULT)
+	if(CMD_RESULT)
         message(FATAL_ERROR "Error running ${CMD} ${ARGS}\n Error: ${CMD_RESULT}")
     endif()
 endfunction()

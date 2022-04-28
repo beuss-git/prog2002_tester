@@ -11,7 +11,7 @@ check_enabledtests_exists()
 create_test_driver(LabXX)
 
 add_renderdoc_test(
-		LabXX_Test_01	
+		LabXX_Test_01
 		LabXX						# exe
 		FRAME 5						# data for test executable
 		FRAME_COUNT 20

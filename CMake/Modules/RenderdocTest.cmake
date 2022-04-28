@@ -42,7 +42,7 @@ function(add_renderdoc_test TEST_NAME KIT)
 
 	check_test_enabled()
 	if (NOT ${TEST_ENABLED})
-		message(WARNING "Test ${TEST_NAME} is not enabled in EnabledTests.txt")
+		#message(WARNING "Test ${TEST_NAME} is not enabled in EnabledTests.txt")
 		return()
 	endif()
 
