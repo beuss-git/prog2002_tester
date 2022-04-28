@@ -44,7 +44,7 @@ endfunction()
 # Sets TEST_ENABLED if match is found in EnabledTests.txt
 function(check_test_enabled)
 	# Read in the file
-	file(READ EnabledTests.txt TESTS_INPUT)
+	file(READ ${CMAKE_SOURCE_DIR}/Labs/EnabledTests.txt TESTS_INPUT)
 
 	set(TEST_ENABLED OFF PARENT_SCOPE)
 
@@ -58,10 +58,10 @@ function(check_test_enabled)
 	endforeach()
 endfunction()
 
-function(add_renderdoc_test TEST_NAME KIT)
+function(add_renderdoc_test TEST_NAME TARGET_NAME KIT)
 	# Fail if we can't find EnabledTests.txt
-	if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/EnabledTests.txt)
-		message(FATAL_ERROR "File ${CMAKE_CURRENT_SOURCE_DIR}/EnabledTests.txt not found")
+	if(NOT EXISTS ${CMAKE_SOURCE_DIR}/Labs/EnabledTests.txt)
+		message(FATAL_ERROR "File ${CMAKE_SOURCE_DIR}/Labs/EnabledTests.txt not found")
 	endif()
 
 	check_test_enabled()
