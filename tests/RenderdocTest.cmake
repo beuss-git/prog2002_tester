@@ -76,7 +76,7 @@ function(add_renderdoc_test TEST_NAME KIT)
 	set(TESTDRIVER_ARGS "${PARSED_UNPARSED_ARGUMENTS} --capture_file ${PROJECT_BINARY_DIR}/${KIT}_capture.rdc")
 
 
-	add_test(NAME ${TEST_NAME} COMMAND 
+	add_test(NAME RenderDocTest COMMAND 
 			${CMAKE_COMMAND}
 				-DCMD1=${CMD_BIN}				# Launches test binary through renderdoccmd
 				-DCMD1ARGS=${CMD_ARGS}
