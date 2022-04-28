@@ -1,4 +1,4 @@
-#include "../include/framework.hpp"
+#include "../include/graphics_framework.hpp"
 #include <argparse/argparse.hpp>
 #include <renderdoc/api/app/renderdoc_app.h>
 
@@ -91,9 +91,13 @@ int GraphicsFramework::main() {
 			break;
 		}
 	}
-	cleanup();
+
+	if (!cleanup()) {
+		return EXIT_FAILURE;
+	}
 
 
+	// TODO: run_state is false if student wants to just exit the application
 	return run_state ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
@@ -112,10 +116,8 @@ void GraphicsFramework::init_renderdoc() {
 	}
 #else
 
-	// At init, on linux/android.
-	// For android replace librenderdoc.so with libVkLayer_GLES_RenderDoc.so
-	if(void *mod = dlopen("librenderdoc.so", RTLD_NOW | RTLD_NOLOAD))
-	{
+	// At init, on linux.
+	if(void *mod = dlopen("librenderdoc.so", RTLD_NOW | RTLD_NOLOAD)) {
 		std::cout << "Found renderdoc lib!\n";
 		pRENDERDOC_GetAPI RENDERDOC_GetAPI = (pRENDERDOC_GetAPI)dlsym(mod, "RENDERDOC_GetAPI");
 		if (!RENDERDOC_GetAPI(eRENDERDOC_API_Version_1_1_2, (void **)&m_rdoc_api)) {

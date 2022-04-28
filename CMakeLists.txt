@@ -12,7 +12,7 @@ include ("modules/Tests.cmake")
 add_subdirectory(external/argparse)
 
 # Create the framework library
-add_library(${PROJECT_NAME} "src/framework.cpp" "include/framework.hpp")
+add_library(${PROJECT_NAME} "src/graphics_framework.cpp")
 
 # Enable C++17 for compilers that has older defaults
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
