@@ -40,7 +40,38 @@ function(create_test_driver KIT KIT_LIBS KitTests)
 	target_compile_features(${KIT}TestDriver PRIVATE cxx_std_17)
 endfunction()
 
+
+# Sets TEST_ENABLED if match is found in EnabledTests.txt
+function(check_test_enabled)
+	# Read in the file
+	file(READ EnabledTests.txt TESTS_INPUT)
+
+	set(TEST_ENABLED OFF PARENT_SCOPE)
+
+	# I have to match line by line because ^ is broken when reading the file like this
+	STRING(REGEX REPLACE "\r?\n" ";" TESTS_INPUT "${TESTS_INPUT}")
+	foreach(line ${TESTS_INPUT})
+		if("${line}" MATCHES "^[\\s]*${TEST_NAME}$")
+			set(TEST_ENABLED ON PARENT_SCOPE)
+			return()
+		endif()
+	endforeach()
+endfunction()
+
 function(add_renderdoc_test TEST_NAME KIT)
+	# Fail if we can't find EnabledTests.txt
+	if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/EnabledTests.txt)
+		message(FATAL_ERROR "File ${CMAKE_CURRENT_SOURCE_DIR}/EnabledTests.txt not found")
+	endif()
+
+	check_test_enabled()
+	if (NOT ${TEST_ENABLED})
+		return()
+	endif()
+
+	# Let the student know that it's enabled
+	message(STATUS "Test ${TEST_NAME} enabled in EnabledTests.txt")
+
 	cmake_parse_arguments(
 		PARSED
 		""
