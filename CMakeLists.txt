@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.8)
 
-project(graphics_framework)
+project(TESTER)
 
 # Enable testing
 enable_testing()
