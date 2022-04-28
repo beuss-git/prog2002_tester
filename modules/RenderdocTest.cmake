@@ -25,14 +25,14 @@ function(create_test_driver KIT KIT_LIBS KitTests)
 	#set(CMAKE_TESTDRIVER_BEFORE_TESTMAIN "${emscripten_before}#include \"itkTestDriverBeforeTest.inc\"")
 	#set(CMAKE_TESTDRIVER_AFTER_TESTMAIN "#include \"itkTestDriverAfterTest.inc\"${emscripten_after}")
 
-	set(ADDITIONAL_SRC ${ARGN} "renderdoc_helper.cpp" "renderdoc_helper.hpp")
+	set(ADDITIONAL_SRC ${ARGN} "src/testing/renderdoc_helper.cpp" "src/testing/renderdoc_helper.hpp")
 
 	create_test_sourcelist(Tests ${KIT}TestDriver.cxx ${KitTests})
 
 	add_executable(${KIT}TestDriver ${KIT}TestDriver.cxx ${Tests} ${ADDITIONAL_SRC})
 
 	target_include_directories(${KIT}TestDriver PRIVATE
-		${CMAKE_SOURCE_DIR}/tests 
+		${CMAKE_CURRENT_SOURCE_DIR}/external
 	)
 
 	target_link_libraries(${KIT}TestDriver PRIVATE ${KIT_LIBS} ${RENDERDOC_LIBRARY} fmt::fmt argparse::argparse)
@@ -66,6 +66,7 @@ function(add_renderdoc_test TEST_NAME TARGET_NAME KIT)
 
 	check_test_enabled()
 	if (NOT ${TEST_ENABLED})
+		message(WARNING "Test ${TEST_NAME} is not enabled in EnabledTests.txt")
 		return()
 	endif()
 
@@ -113,7 +114,7 @@ function(add_renderdoc_test TEST_NAME TARGET_NAME KIT)
 				-DCMD1ARGS=${CMD_ARGS}
 				-DCMD2=${TESTDRIVER_BIN}		# Executes the test driver
 				-DCMD2ARGS=${TESTDRIVER_ARGS}
-			-P ${CMAKE_CURRENT_SOURCE_DIR}/runtests.cmake
+			-P ${CMAKE_CURRENT_SOURCE_DIR}/modules/RunTests.cmake
 	)
 
 endfunction()

@@ -16,7 +16,6 @@ protected:
 	virtual bool run() = 0;
 	virtual bool cleanup() = 0;
 private:
-	void set_marker(const std::string& name);
 	bool should_capture();
 	bool running();
 	void init_renderdoc();

@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
-#include "../external/renderdoc/api/replay/renderdoc_replay.h"
-
+#include <renderdoc/api/replay/renderdoc_replay.h>
 
 class RenderDocHelper {
 public:

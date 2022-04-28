@@ -1,4 +1,4 @@
-#include "graphics_framework.hpp"
+#include "../include/framework.hpp"
 #include <argparse/argparse.hpp>
 #include <renderdoc/api/app/renderdoc_app.h>
 
@@ -7,8 +7,6 @@
 #else
 #include <dlfcn.h>
 #endif
-
-#include <glad/glad.h>
 
 GraphicsFramework::GraphicsFramework(int argc, char* argv[]) {
 	argparse::ArgumentParser parser("test_framework");
@@ -70,13 +68,6 @@ bool GraphicsFramework::running() {
 	}
 
 	return true;
-}
-
-void GraphicsFramework::set_marker(const std::string& name) {
-	if (glDebugMessageInsert)
-		glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 0,
-		                     GL_DEBUG_SEVERITY_LOW, -1, name.c_str());
-
 }
 
 int GraphicsFramework::main() {

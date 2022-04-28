@@ -21,7 +21,7 @@ bool parse_arguments(argparse::ArgumentParser& parser, int argc, char* argv[]) {
 	return true;
 }
 
-int renderdoc_test(int argc, char* argv[]) {
+int src_testing_renderdoc_test(int argc, char* argv[]) {
 	argparse::ArgumentParser parser("test_framework");
 	if (!parse_arguments(parser, argc, argv))
 		return -1;
