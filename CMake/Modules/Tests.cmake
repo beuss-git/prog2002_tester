@@ -1,4 +1,4 @@
-include (modules/RenderdocTest.cmake)
+include (CMake/Modules/RenderdocTest.cmake)
 
 
 create_test_driver(LabXX)

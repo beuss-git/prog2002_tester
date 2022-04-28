@@ -6,7 +6,7 @@ project(TESTER)
 enable_testing()
 
 # Define the tests
-include ("modules/Tests.cmake")
+include ("CMake/Modules/Tests.cmake")
 
 # Add argparse for framework library
 add_subdirectory(external/argparse)

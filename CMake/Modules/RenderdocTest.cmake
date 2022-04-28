@@ -111,7 +111,7 @@ function(add_renderdoc_test TEST_NAME KIT)
 				-DCMD1ARGS=${CMD_ARGS}
 				-DCMD2=${TESTDRIVER_BIN}		# Executes the test driver
 				-DCMD2ARGS=${TESTDRIVER_ARGS}
-			-P ${CMAKE_CURRENT_SOURCE_DIR}/modules/RunTests.cmake
+			-P ${CMAKE_CURRENT_SOURCE_DIR}/CMake/Modules/RunTests.cmake
 	)
 
 endfunction()
