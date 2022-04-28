@@ -1,6 +1,12 @@
-
+include(CMake/Modules/TestManager.cmake)
 
 function(add_output_test TEST_TARGET TEST_NAME )
+	check_test_enabled()
+	if (NOT ${TEST_ENABLED})
+		message(WARNING "Test ${TEST_NAME} is not enabled in EnabledTests.txt")
+		return()
+	endif()
+
 	if(MSVC) 
 		set(CMD_BIN cmd)
 		set(CMD_ARGS "/c ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${TEST_TARGET} > ${TEST_NAME}_out.txt")
