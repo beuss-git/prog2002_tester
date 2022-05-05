@@ -1,6 +1,7 @@
 #include "renderdoc_helper.hpp"
 #include <fmt/core.h>
 #include <fmt/format.h>
+#include <magic_enum.hpp>
 #ifdef _WIN32
 #include <Windows.h>
 #endif
@@ -110,4 +111,171 @@ ActionDescription RenderDocHelper::find_action_by_name(std::string_view name) co
 		}
 	}
 	return ActionDescription{};
+}
+
+ActionDescription RenderDocHelper::find_action_by_event_id(uint32_t event_id) const {
+	for (const auto& action : m_controller->GetRootActions()) {
+		if (action.eventId == event_id) {
+			return action;
+		}
+	}
+	return ActionDescription{};
+}
+
+void RenderDocHelper::print_textures() {
+	const auto& textures = m_controller->GetTextures();
+	for (auto& texture : textures) {
+		fmt::print("[{}] {}\n", *(uint64_t*)&texture.resourceId, magic_enum::enum_name(texture.type));
+	}
+	fmt::print("\n");
+}
+void RenderDocHelper::print_buffers() {
+	const auto& buffers = m_controller->GetBuffers();
+	for (auto& buffer : buffers) {
+		fmt::print("[{}] {}, len: {}\n", *(uint64_t*)&buffer.resourceId, magic_enum::enum_name(buffer.creationFlags), buffer.length);
+	}
+
+
+
+	const auto& resources = m_controller->GetResources();
+	for (auto& resource : resources) {
+		if (resource.type == ResourceType::Buffer) {
+			print_buffer(resource, {});
+		}
+	}
+
+	fmt::print("\n");
+}
+
+void RenderDocHelper::print_resources() {
+	const auto& resources = m_controller->GetResources();
+	for (auto& resource : resources) {
+		fmt::print("[{}] {}: {}\n", *(uint64_t*)&resource.resourceId, magic_enum::enum_name(resource.type), resource.name.c_str());
+	}
+	fmt::print("\n");
+}
+
+void RenderDocHelper::print_buffer(ResourceDescription buf, BufferDescription buffer) const {
+	const auto chunks = buf.initialisationChunks;
+	for (auto chunk : chunks) {
+		const auto obj = m_structured_data->chunks[chunk];
+		fmt::print("Name: {}\n", 
+			obj->name.c_str());
+
+		fmt::print("Type name: {}\n", 
+			obj->type.name.c_str());
+
+		fmt::print("Type data: {}\n", 
+			obj->data.str.c_str());
+		
+		//auto data_children = obj->data.c
+		int index = 0;
+		for (;;) {
+			auto child = obj->GetChild(index++);
+			if (!child) {
+				break;
+			}
+			//if (child->name.c_str() == std::string("bytesize")) {
+			//	int bp = 0;
+			//	child->data.basic.u
+			//}
+			fmt::print("\tchild: {}\n", child->name.c_str());
+			fmt::print("\t\ttype: {}\n", child->type.name.c_str());
+			fmt::print("\t\tdata: {}\n", child->data.str.c_str());
+			fmt::print("\t\tdata val: {}\n", sdobject_tostring(child));
+		}
+
+		auto usages = m_controller->GetUsage(buf.resourceId);
+		// This holds all the usages (for example this could be used in drawarrays, and this gets us that event id
+		if (!usages.empty()) {
+			fmt::print("Usages:\n");
+			for (auto usage : usages) {
+				auto action = find_action_by_event_id(usage.eventId);
+				auto action_name = action.GetName(*m_structured_data);
+				fmt::print("[] {}\n", usage.eventId, action_name.c_str());
+			}
+		}
+	}
+}
+
+bool RenderDocHelper::contains_vertex_array() {
+	// Mutiple different types of state objects, so have do do it by type and partial name
+	return contains_resource(ResourceType::StateObject, "Vertex Array");
+}
+
+bool RenderDocHelper::contains_vertex_buffer() {
+	return contains_resource(ResourceType::Buffer);
+}
+
+bool RenderDocHelper::contains_shader() {
+	return contains_resource(ResourceType::Shader);
+}
+
+bool RenderDocHelper::has_transferred_buffer_data() {
+	const auto vertex_buffers = get_vertex_buffers();
+
+	for (auto& vertex_buffer : vertex_buffers) {
+		// TODO: check if order matters if directly indexing children (if need be)
+
+		// Chunks containing calls to glGenBuffers, glBindBuffer, glBufferData etc
+		const auto chunk_ids = vertex_buffer.initialisationChunks;
+		for (auto chunk_id : chunk_ids) {
+			const auto& chunk = m_structured_data->chunks[chunk_id];
+			if (chunk->name == "glBufferData") {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool RenderDocHelper::contains_resource(ResourceType type, std::string_view name) const {
+	const auto& resources = m_controller->GetResources();
+	for (auto& resource : resources) {
+		if (resource.type == type && (name.empty() || resource.name.contains(rdcstr(name.data())))) {
+			return true;
+		}
+	}
+	return false;
+}
+
+std::vector<ResourceDescription> RenderDocHelper::get_vertex_buffers() const {
+	// NOTE: Not sure if this will work when other buffer types are introduced
+	return get_resources_by_type(ResourceType::Buffer);
+}
+
+std::vector<ResourceDescription> RenderDocHelper::get_shaders() const {
+	return get_resources_by_type(ResourceType::Shader);
+}
+
+std::vector<ResourceDescription> RenderDocHelper::get_resources_by_type(ResourceType type) const {
+	std::vector<ResourceDescription> resources{};
+	const auto& all_resources = m_controller->GetResources();
+	for (auto& resource : all_resources) {
+		if (resource.type == type) {
+			resources.push_back(resource);
+		}
+	}
+	return resources;
+}
+
+std::string RenderDocHelper::sdobject_tostring(SDObject* obj) const {
+
+	if (obj->IsUInt()) {
+		return fmt::format("{}", obj->AsUInt64());
+	}
+	if (obj->IsInt()) {
+		return fmt::format("{}", obj->AsInt64());
+	}
+	if (obj->IsFloat()) {
+		return fmt::format("{}", obj->AsFloat());
+	}
+	if (obj->IsResource()) {
+		auto resource_id = obj->AsResourceId();
+		return fmt::format("{}", *(uint64_t*)&resource_id);
+	}
+	if (obj->type.basetype == SDBasic::Boolean) {
+		return fmt::format("{}", obj->data.basic.b);
+	}
+	return "UNK";
 }
