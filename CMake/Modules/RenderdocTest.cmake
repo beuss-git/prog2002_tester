@@ -3,12 +3,19 @@ include(CMake/Modules/TestManager.cmake)
 find_library(RENDERDOC_LIBRARY NAMES renderdoc REQUIRED)
 
 include(FetchContent)
+# fmt
 FetchContent_Declare(
 	fmt
 	GIT_REPOSITORY https://github.com/fmtlib/fmt.git
 	GIT_TAG 8.1.1)
 FetchContent_MakeAvailable(fmt)
 
+# magicenum
+FetchContent_Declare(
+	magic_enum
+	GIT_REPOSITORY https://github.com/Neargye/magic_enum.git
+	GIT_TAG v0.7.3)
+FetchContent_MakeAvailable(magic_enum)
 
 
 if (MSVC)
@@ -31,7 +38,7 @@ function(create_test_driver KIT)
 		${CMAKE_CURRENT_SOURCE_DIR}/external
 	)
 
-	target_link_libraries(${KIT}TestDriver PRIVATE ${RENDERDOC_LIBRARY} fmt::fmt argparse::argparse)
+	target_link_libraries(${KIT}TestDriver PRIVATE ${RENDERDOC_LIBRARY} fmt::fmt argparse::argparse magic_enum::magic_enum)
 
 	target_compile_features(${KIT}TestDriver PRIVATE cxx_std_17)
 endfunction()
