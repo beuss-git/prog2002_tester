@@ -26,12 +26,12 @@ int src_testing_renderdoc_test(int argc, char* argv[]) {
 	if (!parse_arguments(parser, argc, argv))
 		return -1;
 
-	const auto expected_drawcalls_count = parser.get<int>("drawcalls_count");
 	const auto capture_file = parser.get<std::string>("capture_file");
 	if (capture_file.empty()) {
 		fmt::print("No capture file!\n");
 		return -1;
 	}
+
 
 	RenderDocHelper helper(capture_file);
 	if (!helper.open_capture()) {
@@ -39,6 +39,7 @@ int src_testing_renderdoc_test(int argc, char* argv[]) {
 		return -1;
 	}
 
+	const auto expected_drawcalls_count = parser.get<int>("drawcalls_count");
 	if (expected_drawcalls_count != -1) {
 		if (const auto drawcalls_count = helper.drawcalls_count();
 			static_cast<size_t>(expected_drawcalls_count) != drawcalls_count) {
@@ -47,16 +48,16 @@ int src_testing_renderdoc_test(int argc, char* argv[]) {
 		}
 	}
 
-	auto drawcalls_action = helper.find_action_by_name("glDrawArrays()");
-	// This is just to test the function, not implemented as actual test
-	if (!helper.check_vertex_data(drawcalls_action, {
-		-0.5f, -0.5f, 0.f, 1.f,
-		0.5f, -0.5f, 0.f, 1.f,
-		0.0f, 0.5f, 0.f, 1.f
-		})) {
-		fmt::print(fg(fmt::color::red), "vertex data does not match the expected vertex data\n");
-		return -1;
-	}
+	//auto drawcalls_action = helper.find_action_by_name("glDrawArrays()");
+	//// This is just to test the function, not implemented as actual test
+	//if (!helper.check_vertex_data(drawcalls_action, {
+	//	-0.5f, -0.5f, 0.f, 1.f,
+	//	0.5f, -0.5f, 0.f, 1.f,
+	//	0.0f, 0.5f, 0.f, 1.f
+	//	})) {
+	//	fmt::print(fg(fmt::color::red), "vertex data does not match the expected vertex data\n");
+	//	return -1;
+	//}
 
 	return 0;
 }
