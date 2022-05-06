@@ -14,7 +14,7 @@ std::string conv(const rdcstr &s) {
 	return { s.begin(), s.end() };
 }
 
-RenderDocHelper::RenderDocHelper(std::string rdc_path) : m_rdc_path(std::move(rdc_path)) { }
+RenderDocHelper::RenderDocHelper(const std::string& rdc_path) : m_rdc_path(rdc_path) { }
 
 RenderDocHelper::~RenderDocHelper() {
 	if (m_capture_file) {
@@ -39,13 +39,13 @@ bool RenderDocHelper::open_capture() {
 
 	m_capture_file = RENDERDOC_OpenCaptureFile();
 	if (!m_capture_file) {
-		fmt::print("Failed to open capture file");
+		fmt::print("Failed to open capture file\n");
 		return false;
 	}
 
     ReplayStatus st = m_capture_file->OpenFile(conv(m_rdc_path), "rdc",nullptr);
 	if (st != ReplayStatus::Succeeded) {
-		fmt::print("Failed to open file: {}", m_rdc_path);
+		fmt::print("Failed to open file: {}\n", m_rdc_path);
 		return false;
 	}
 
@@ -74,7 +74,46 @@ void RenderDocHelper::dump_actions() const {
 }
 
 size_t RenderDocHelper::drawcalls_count() const {
-	return m_controller->GetRootActions().size();
+	return get_drawcalls().size();
+}
+
+size_t RenderDocHelper::actions_count(ActionFlags flags) const {
+	size_t count = 0;
+	for (const auto& action : m_controller->GetRootActions()) {
+		if (action.flags & flags) {
+			count++;
+		}
+	}
+	return count;
+}
+
+size_t RenderDocHelper::resource_count(ResourceType type, std::string_view name) const {
+	size_t count = 0;
+	const auto& all_resources = m_controller->GetResources();
+	for (auto& resource : all_resources) {
+		if (resource.type == type && (name.empty() || resource.name.contains(rdcstr(name.data())))) {
+			count++;
+		}
+	}
+	return count;
+}
+
+size_t RenderDocHelper::vertex_buffer_transfer_count() {
+	size_t count = 0;
+
+	const auto vertex_buffers = get_vertex_buffers();
+	for (auto& vertex_buffer : vertex_buffers) {
+
+		// Chunks containing calls to glGenBuffers, glBindBuffer, glBufferData etc
+		const auto chunk_ids = vertex_buffer.initialisationChunks;
+		for (auto chunk_id : chunk_ids) {
+			const auto& chunk = m_structured_data->chunks[chunk_id];
+			if (chunk->name == "glBufferData") {
+				count++;
+			}
+		}
+	}
+	return count;
 }
 
 /**
@@ -120,6 +159,14 @@ ActionDescription RenderDocHelper::find_action_by_event_id(uint32_t event_id) co
 		}
 	}
 	return ActionDescription{};
+}
+
+void RenderDocHelper::print_actions() {
+	for (const auto& action : m_controller->GetRootActions()) {
+		if (action.flags & ActionFlags::Drawcall) {
+			fmt::print("{}\n", action.GetName(*m_structured_data).c_str());
+		}
+	}
 }
 
 void RenderDocHelper::print_textures() {
@@ -211,6 +258,10 @@ bool RenderDocHelper::contains_shader() {
 	return contains_resource(ResourceType::Shader);
 }
 
+bool RenderDocHelper::contains_drawcall() {
+	return contains_action(ActionFlags::Drawcall);
+}
+
 bool RenderDocHelper::has_transferred_buffer_data() {
 	const auto vertex_buffers = get_vertex_buffers();
 
@@ -237,6 +288,29 @@ bool RenderDocHelper::contains_resource(ResourceType type, std::string_view name
 		}
 	}
 	return false;
+}
+
+bool RenderDocHelper::contains_action(ActionFlags flags) const {
+	for (const auto& action : m_controller->GetRootActions()) {
+		if (action.flags & flags) {
+			return true;
+		}
+	}
+	return false;
+}
+
+std::vector<ActionDescription> RenderDocHelper::get_actions(ActionFlags flags) const {
+	std::vector<ActionDescription> actions{};
+	for (const auto& action : m_controller->GetRootActions()) {
+		if (action.flags & flags) {
+			actions.push_back(action);
+		}
+	}
+	return actions;
+}
+
+std::vector<ActionDescription> RenderDocHelper::get_drawcalls() const {
+	return get_actions(ActionFlags::Drawcall);
 }
 
 std::vector<ResourceDescription> RenderDocHelper::get_vertex_buffers() const {
