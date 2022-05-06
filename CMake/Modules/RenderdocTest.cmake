@@ -50,6 +50,7 @@ endfunction()
 
 
 
+# TODO: make work properly without specifying FRAME and FRAME_COUNT
 function(add_renderdoc_test TEST_NAME KIT)
 
 	check_test_enabled()

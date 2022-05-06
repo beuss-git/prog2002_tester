@@ -5,6 +5,7 @@ function(exec_check CMD ARGS)
 	  separate_arguments(ARGS)
 	endif()
 
+	# TODO: Fail if we failed to capture (error in we are testing)
 	if(DEFINED ${WORKING_DIR})
 		execute_process(COMMAND ${CMD} ${ARGS} RESULT_VARIABLE CMD_RESULT WORKING_DIRECTORY ${WORKING_DIR})
 	else()
