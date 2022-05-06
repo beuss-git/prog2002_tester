@@ -33,6 +33,10 @@ int src_testing_renderdoc_test(int argc, char* argv[]) {
 	}
 
 
+	Tester tester(capture_file, parser);
+	return tester.perform_tests() ? 0 : -1;
+
+
 	RenderDocHelper helper(capture_file);
 	if (!helper.open_capture()) {
 		fmt::print("Failed to open the capture file, exiting!\n");
@@ -47,17 +51,6 @@ int src_testing_renderdoc_test(int argc, char* argv[]) {
 			return -1;
 		}
 	}
-
-	//auto drawcalls_action = helper.find_action_by_name("glDrawArrays()");
-	//// This is just to test the function, not implemented as actual test
-	//if (!helper.check_vertex_data(drawcalls_action, {
-	//	-0.5f, -0.5f, 0.f, 1.f,
-	//	0.5f, -0.5f, 0.f, 1.f,
-	//	0.0f, 0.5f, 0.f, 1.f
-	//	})) {
-	//	fmt::print(fg(fmt::color::red), "vertex data does not match the expected vertex data\n");
-	//	return -1;
-	//}
 
 	return 0;
 }
