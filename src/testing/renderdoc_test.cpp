@@ -2,13 +2,18 @@
 #include <fmt/core.h>
 #include <fmt/color.h>
 #include "renderdoc_helper.hpp"
+#include "tester.hpp"
 
 
 REPLAY_PROGRAM_MARKER()
 
 bool parse_arguments(argparse::ArgumentParser& parser, int argc, char* argv[]) {
-	parser.add_argument("--drawcalls_count").help("target drawcalls count").scan<'i', int>().default_value(-1);
 	parser.add_argument("--capture_file").help("the capture file to analyze").default_value(std::string(""));
+	parser.add_argument("--drawcalls_count").help("target drawcalls count").scan<'i', int>().default_value(-1);
+	parser.add_argument("--vao_count").help("target vao count").scan<'i', int>().default_value(-1);
+	parser.add_argument("--vbo_count").help("target vbo count").scan<'i', int>().default_value(-1);
+	parser.add_argument("--vbo_transfer_count").help("target vbo transfer count").scan<'i', int>().default_value(-1);
+	parser.add_argument("--shader_count").help("target shader count").scan<'i', int>().default_value(-1);
 
 	try {
 		parser.parse_args(argc, argv);
