@@ -28,7 +28,12 @@ endif()
 
 # KIT = TestDriverName
 function(create_test_driver KIT)
-	set(ADDITIONAL_SRC ${ARGN} "src/testing/renderdoc_helper.cpp" "src/testing/renderdoc_helper.hpp")
+	set(ADDITIONAL_SRC ${ARGN} 
+		"src/testing/renderdoc_helper.cpp" 
+		"src/testing/renderdoc_helper.hpp"
+		"src/testing/tester.cpp"
+		"src/testing/tester.hpp"
+	)
 
 	create_test_sourcelist(Tests ${KIT}TestDriver.cxx "src/testing/renderdoc_test.cpp")
 
