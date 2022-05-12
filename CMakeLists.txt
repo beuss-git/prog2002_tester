@@ -2,9 +2,6 @@ cmake_minimum_required (VERSION 3.8)
 
 project(tester)
 
-# Enable testing
-enable_testing()
-
 # Define the tests
 include ("CMake/Modules/Tests.cmake")
 
