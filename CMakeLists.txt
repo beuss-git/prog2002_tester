@@ -19,3 +19,5 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 # Set include dirs
 target_include_directories(${PROJECT_NAME} PRIVATE "external" "external/argparse/include")
+
+set(TESTER_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" PARENT_SCOPE)
